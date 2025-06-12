@@ -1,0 +1,175 @@
+openapi: 3.0.0
+info:
+  title: User & Task Management API
+  version: 1.0.0
+
+paths:
+  /users:
+    post:
+      summary: Create a new user
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+              required:
+                - name
+                - email
+      responses:
+        '201':
+          description: User created successfully
+        '400':
+          description: Invalid input
+
+    get:
+      summary: List all users
+      responses:
+        '200':
+          description: A list of users
+
+  /users/{userId}:
+    get:
+      summary: Get a specific user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+        '404':
+          description: User not found
+
+    put:
+      summary: Update a user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+      responses:
+        '200':
+          description: User updated
+        '404':
+          description: User not found
+
+    delete:
+      summary: Delete a user
+      parameters:
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: User deleted
+        '404':
+          description: User not found
+
+  /tasks:
+    post:
+      summary: Create a task
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                dueDate:
+                  type: string
+                  format: date
+                userId:
+                  type: string
+              required:
+                - title
+                - userId
+      responses:
+        '201':
+          description: Task created
+        '400':
+          description: Invalid input
+
+    get:
+      summary: List all tasks
+      responses:
+        '200':
+          description: A list of tasks
+
+  /tasks/{taskId}:
+    get:
+      summary: Get a task by ID
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task details
+        '404':
+          description: Task not found
+
+    put:
+      summary: Update a task
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                dueDate:
+                  type: string
+                  format: date
+      responses:
+        '200':
+          description: Task updated
+        '404':
+          description: Task not found
+
+    delete:
+      summary: Delete a task
+      parameters:
+        - in: path
+          name: taskId
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: Task deleted
+        '404':
+          description: Task not found
