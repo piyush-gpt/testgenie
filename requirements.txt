@@ -1,8 +1,8 @@
-numpy==1.24.3
-langchain==0.0.352
-langchain-openai==0.0.2
-langchain-community==0.0.10
-chromadb==0.4.18
-pyyaml==6.0.2
-python-dotenv==1.1.0
-streamlit==1.32.2
+numpy>=2.1.0
+langchain>=0.1.0
+langchain-openai>=0.0.5
+langchain-community>=0.0.13
+chromadb>=0.4.22
+pyyaml>=6.0.2
+python-dotenv>=1.1.0
+streamlit>=1.32.2
