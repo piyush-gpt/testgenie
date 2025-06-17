@@ -1,7 +1,11 @@
+import os
+import sys
+import pysqlite3
+sys.modules['sqlite3'] = pysqlite3
+
 from langchain_community.vectorstores import Chroma
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
-import os
 
 CHROMA_DIR = "./chroma_store"
 os.makedirs(CHROMA_DIR, exist_ok=True)
