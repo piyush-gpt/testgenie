@@ -1,9 +1,11 @@
 numpy>=2.1.0
-langchain>=0.1.0
-langchain-openai>=0.0.5
-langchain-community>=0.0.13
+pydantic>=1.9,<2.0
+langchain==0.0.352
+langchain-openai==0.0.2
+langchain-community==0.0.10
 chromadb==0.3.29
 pyyaml>=6.0.2
 python-dotenv>=1.1.0
 streamlit>=1.32.2
 pysqlite3-binary>=0.5.0
+fastapi==0.95.2
