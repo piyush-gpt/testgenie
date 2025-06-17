@@ -5,6 +5,9 @@ from loaders.api_loader import load_openapi_spec, chunk_spec_text
 from vectorstore.store import build_vectorstore, get_retriever
 from chains.qa_chain import build_qa_chain
 import tempfile
+import sys
+import pysqlite3
+sys.modules["sqlite3"] = sys.modules["pysqlite3"]
 
 load_dotenv()
 
