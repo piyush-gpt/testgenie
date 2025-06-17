@@ -1,11 +1,15 @@
-from langchain_community.vectorstores import Chroma
+from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_openai import OpenAIEmbeddings
 import os
+import pickle
 
-CHROMA_DIR = "./chroma_store"
-os.makedirs(CHROMA_DIR, exist_ok=True)
-os.chmod(CHROMA_DIR, 0o777)  
+VECTORSTORE_DIR = "./vectorstore"
+os.makedirs(VECTORSTORE_DIR, exist_ok=True)
+os.chmod(VECTORSTORE_DIR, 0o777)
+
+def get_vectorstore_path(project_name: str) -> str:
+    return os.path.join(VECTORSTORE_DIR, f"{project_name}.pkl")
 
 def build_vectorstore(chunks, project_name: str):
     docs = [
@@ -13,35 +17,31 @@ def build_vectorstore(chunks, project_name: str):
         for chunk in chunks
     ]
 
-    vectorstore = Chroma.from_documents(
+    vectorstore = FAISS.from_documents(
         documents=docs,
-        embedding=OpenAIEmbeddings(),
-        persist_directory=CHROMA_DIR
+        embedding=OpenAIEmbeddings()
     )
+    
+    # Save the vectorstore
+    vectorstore_path = get_vectorstore_path(project_name)
+    with open(vectorstore_path, "wb") as f:
+        pickle.dump(vectorstore, f)
+    
     return vectorstore
 
 def project_exists(project_name: str) -> bool:
-    try:
-        vectorstore = Chroma(
-            embedding_function=OpenAIEmbeddings(),
-            persist_directory=CHROMA_DIR
-        )
-        results = vectorstore.get(
-            where={"project": project_name},
-            limit=1
-        )
-        return len(results['ids']) > 0
-    except Exception:
-        return False
+    vectorstore_path = get_vectorstore_path(project_name)
+    return os.path.exists(vectorstore_path)
 
 def get_retriever(project_name: str):
     if not project_exists(project_name):
         raise ValueError(f"Project '{project_name}' does not exist")
         
-    vectorstore = Chroma(
-        embedding_function=OpenAIEmbeddings(),
-        persist_directory=CHROMA_DIR
-    )
+    # Load the vectorstore
+    vectorstore_path = get_vectorstore_path(project_name)
+    with open(vectorstore_path, "rb") as f:
+        vectorstore = pickle.load(f)
+    
     retriever = vectorstore.as_retriever(
         search_kwargs={"filter": {"project": project_name}}
     )
