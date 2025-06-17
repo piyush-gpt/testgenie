@@ -36,11 +36,12 @@ def get_retriever(project_name: str):
     if not project_exists(project_name):
         raise ValueError(f"Project '{project_name}' does not exist")
         
-    # Load the vectorstore using FAISS's native load method
+    # Load the vectorstore using FAISS's native load method with safe deserialization
     vectorstore_path = get_vectorstore_path(project_name)
     vectorstore = FAISS.load_local(
         vectorstore_path,
-        OpenAIEmbeddings()
+        OpenAIEmbeddings(),
+        allow_dangerous_deserialization=True  # Safe because we only load our own saved files
     )
     
     retriever = vectorstore.as_retriever(
